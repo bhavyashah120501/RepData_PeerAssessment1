@@ -7,7 +7,8 @@ output:
 
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 library(ggplot2)
 if(!file.exists("data.zip")){
   download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip", "data.zip")
@@ -19,7 +20,8 @@ activity <- read.csv("activity.csv")
 
 
 ## What is mean total number of steps taken per day?
-```{r}
+
+```r
 stepsperday <-  with(activity , aggregate(steps ~ date , FUN = sum ))
 means <- mean(stepsperday$steps)
 medians <- median(stepsperday$steps)
@@ -29,7 +31,8 @@ medians <- median(stepsperday$steps)
 ## What is the average daily activity pattern?
 
 Average Daily Patterns
-```{r}
+
+```r
 library(ggplot2)
 g <- ggplot(stepsperday ,aes(steps)) + geom_histogram(binwidth = 2500 ,fill="lightblue" , col = "darkblue") + labs(title="histogram of total number of  steps per day")
 png("plot1.png")
@@ -37,7 +40,8 @@ png("plot1.png")
 
 
 Average Pattern  per interval
-```{r}
+
+```r
 library(ggplot2)
 meanstepsperinterval <- with(activity , aggregate(steps ~ interval , FUN = mean , na.rm=TRUE))
 g <- g <- ggplot(meanstepsperinterval , aes(interval , steps)) + geom_line() + labs(x = "Date" , y = "Average Steps" , title ="Average steps per interval")
@@ -49,15 +53,16 @@ png("plot2.png")
 
 
 ## Imputing missing values
-```{r}
+
+```r
 NArows <- with(activity,sum(is.na(steps)))
 
 activity$steps <- ifelse(is.na(activity$steps) , meanstepsperinterval$steps[match(meanstepsperinterval$interval,activity$interval)] , activity$steps)
-
 ```
 
 Change in mean Steps per day
-```{r}
+
+```r
 library(ggplot2)
 stepsperday2 <-  with(activity , aggregate(steps ~ date , FUN = sum ))
 g <- ggplot(stepsperday2 ,aes(steps)) + geom_histogram(binwidth = 2500 ,fill="lightblue" , col = "darkblue") + labs(title="histogram of total number of  steps per day")
@@ -65,8 +70,23 @@ png("plot3.png")
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r}
+
+```r
 library(lubridate)
+```
+
+```
+## 
+## Attaching package: 'lubridate'
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     date, intersect, setdiff, union
+```
+
+```r
 library(ggplot2)
 y <- day(activity$date)
 weekends <- y== 7 | y==1
